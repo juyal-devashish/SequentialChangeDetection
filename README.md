@@ -1,4 +1,4 @@
-# Machine Learning based Sequential Change Detection Schemes
+# ML based Sequential Change Detection Schemes
 
 At the moment, this repository implements and evaluates a sequential change detection framework using the Cumulative Sum (CuSum) algorithm from [Xie et. al.](https://arxiv.org/abs/2104.04186), enhanced with estimated likelihood ratios (LLRs) via convex risk minimization, based on methods outlined by [Nguyen et al.](https://arxiv.org/abs/0809.0853), inshort, the project is exploring change detection in real-time data streams.
 
