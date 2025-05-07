@@ -44,10 +44,6 @@ CUSUM monitors the cumulative sum of log-likelihood ratios (LLRs) to signal dist
 
 Due to unknown distributions \$P\$ and \$Q\$, we employ convex risk minimization methods as introduced by Nguyen et al. to estimate the likelihood ratio directly from a reference dataset containing samples from both distributions.
 
-Specifically, we solve the convex optimization:
-
-$\min_{g \in \mathcal{G}} E_{Q}[g(X)] - E_{P}[\log(g(X))] + \frac{\lambda}{2} I^2(g),$
-
 where \$\mathcal{G}\$ is a suitable function class and \$I(g)\$ is a complexity regularizer.
 
 ## References
