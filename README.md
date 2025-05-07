@@ -42,7 +42,7 @@ CUSUM monitors the cumulative sum of log-likelihood ratios (LLRs) to signal dist
 
 ### Likelihood Ratio Estimation from Nguyen et. al.
 
-Due to unknown distributions \$P\$ and \$Q\$, we employ convex risk minimization methods as introduced by Nguyen et al. to estimate the likelihood ratio directly from a reference dataset containing samples from both distributions.
+Due to unknown distributions \$P\$ and \$Q\$, we employ convex risk minimization methods as introduced by Nguyen et al. to estimate the likelihood ratio containing samples from both distributions.
 
 ## References
 
