@@ -9,7 +9,7 @@ The core task addressed by this project is to detect an unknown changepoint in a
 * Observations \$X\_i \sim P\$ (pre-change) for \$i \leq T\$.
 * Observations \$X\_i \sim Q\$ (post-change) for \$i > T\$.
 
-Here, \$P\$ and \$Q\$ are unknown probability distributions, and obviously, \$i\$ is the changepoint. Our goal is to detect the change from \$P\$ to \$Q\$ as soon as possible while controlling the false alarm rate.
+Here, \$P\$ and \$Q\$ are unknown probability distributions, and obviously, \$T\$ is the changepoint. Our goal is to detect the change from \$P\$ to \$Q\$ as soon as possible while controlling the false alarm rate.
 
 ## Tentative Objectives (Copied from Slack)
 ### 1. Implementation and Theoretical Validation of CuSum
