@@ -6,10 +6,39 @@ At the moment, this repository implements and evaluates a sequential change dete
 
 The core task addressed by this project is to detect an unknown changepoint in a sequence of observations drawn from two distinct distributions:
 
-* Observations \$X\_i \sim P\$ (pre-change) for \$i \leq T\$.
-* Observations \$X\_i \sim Q\$ (post-change) for \$i > T\$.
+### Stream of Independent \( X \)-valued Observations
 
-Here, \$P\$ and \$Q\$ are unknown probability distributions, and obviously, \$T\$ is the changepoint. Our goal is to detect the change from \$P\$ to \$Q\$ as soon as possible while controlling the false alarm rate.
+Let \( X_1, X_2, \dots \) denote a stream of independent \( X \)-valued observations:
+- For some \( T \in \mathbb{N} \cup \{\infty\} \):
+  - \( X_t \sim P_0 \) for \( t \leq T \),
+  - \( X_t \sim P_1 \neq P_0 \) for \( t > T \).
+  
+### Mild Requirements on the Distributions:
+- Both \( P_0 \) and \( P_1 \) are unknown.
+- \( P_0, P_1 \in \mathcal{P} \) for some known class of distributions \( \mathcal{P} \).
+
+### Hypothesis Testing:
+Decide between:
+- \( H_0 : T = \infty \) (no changepoint), versus
+- \( H_1 : T < \infty \) (changepoint exists).
+
+### Objective:
+Define a stopping time \( \tau \) to declare a detection, that:
+- Minimizes false alarms under \( H_0 \), and
+- Has a small detection delay, \( (\tau - T)^+ \), under \( H_1 \).
+
+## Performance Measures
+
+### When \( T = \infty \) (No Changepoint):
+For an \( \alpha \in (0, 1) \), control:
+- **Average Run Length (ARL)**: \( \mathbb{E}_\infty[\tau] \geq \frac{1}{\alpha} \), or
+- **Probability of False Alarm (PFA)**: \( P_\infty(\tau < \infty) \leq \alpha \).
+
+### When \( T < \infty \):
+Ensure that:
+- \( (\tau - T)^+ \) is small, either in expectation or with high probability.
+- The guarantee should hold for the worst-case choice of \( T \).
+
 
 ## Tentative Objectives (Copied from Slack)
 ### 1. Implementation and Theoretical Validation of CuSum
