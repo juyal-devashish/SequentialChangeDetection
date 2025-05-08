@@ -2,76 +2,73 @@
 
 At the moment, this repository implements and evaluates a sequential change detection framework using the Cumulative Sum (CuSum) algorithm from [Xie et. al.](https://arxiv.org/abs/2104.04186), enhanced with estimated likelihood ratios (LLRs) via convex risk minimization, based on methods outlined by [Nguyen et al.](https://arxiv.org/abs/0809.0853), inshort, the project is exploring change detection in real-time data streams.
 
-## Stream of Independent \( X \)-valued Observations
-
-Let \( X_1, X_2, \dots \) denote a stream of independent \( X \)-valued observations:
-- For some \( T \in \mathbb{N} \cup \{\infty\} \):
-  - \( X_t \sim P_0 \) for \( t \leq T \),
-  - \( X_t \sim P_1 \neq P_0 \) for \( t > T \).
-  
-### Mild Requirements on the Distributions:
-- Both \( P_0 \) and \( P_1 \) are unknown.
-- \( P_0, P_1 \in \mathcal{P} \) for some known class of distributions \( \mathcal{P} \).
-
-### Hypothesis Testing:
-Decide between:
-- \( H_0 : T = \infty \) (no changepoint), versus
-- \( H_1 : T < \infty \) (changepoint exists).
-
-### Objective:
-Define a stopping time \( \tau \) to declare a detection, that:
-- Minimizes false alarms under \( H_0 \), and
-- Has a small detection delay, \( (\tau - T)^+ \), under \( H_1 \).
-
-## Performance Measures
-
-### When \( T = \infty \) (No Changepoint):
-For an \( \alpha \in (0, 1) \), control:
-- **Average Run Length (ARL)**: \( \mathbb{E}_\infty[\tau] \geq \frac{1}{\alpha} \), or
-- **Probability of False Alarm (PFA)**: \( P_\infty(\tau < \infty) \leq \alpha \).
-
-### When \( T < \infty \):
-Ensure that:
-- \( (\tau - T)^+ \) is small, either in expectation or with high probability.
-- The guarantee should hold for the worst-case choice of \( T \).
-
-
 ## Problem Statement
 
-The core task addressed by this project is to detect an unknown changepoint in a sequence of observations drawn from two distinct distributions:
+The core task addressed by this project is to detect an unknown changepoint in a stream of observations drawn from two distinct distributions.
 
-### Stream of Independent \( X \)-valued Observations
+### Stream of Independent \(X\)-valued Observations
 
-Let \( X_1, X_2, \dots \) denote a stream of independent \( X \)-valued observations:
-- For some \( T \in \mathbb{N} \cup \{\infty\} \):
-  - \( X_t \sim P_0 \) for \( t \leq T \),
-  - \( X_t \sim P_1 \neq P_0 \) for \( t > T \).
-  
-### Mild Requirements on the Distributions:
-- Both \( P_0 \) and \( P_1 \) are unknown.
-- \( P_0, P_1 \in \mathcal{P} \) for some known class of distributions \( \mathcal{P} \).
+Let \(X_1, X_2, \dots\) denote a stream of independent \(X\)-valued observations. For some (unknown)  
+\[
+T \in \mathbb{N} \cup \{\infty\},
+\]  
+we have
+\[
+X_t \sim
+\begin{cases}
+P_0, & t \le T,\\
+P_1 \neq P_0, & t > T,
+\end{cases}
+\]
+where:
+- Both \(P_0\) and \(P_1\) are unknown.
+- \(P_0, P_1 \in \mathcal{P}\) for a known class of distributions \(\mathcal{P}\).
 
-### Hypothesis Testing:
-Decide between:
-- \( H_0 : T = \infty \) (no changepoint), versus
-- \( H_1 : T < \infty \) (changepoint exists).
+### Hypothesis Testing
 
-### Objective:
-Define a stopping time \( \tau \) to declare a detection, that:
-- Minimizes false alarms under \( H_0 \), and
-- Has a small detection delay, \( (\tau - T)^+ \), under \( H_1 \).
+We wish to decide between the two hypotheses
+\[
+\begin{aligned}
+H_0 &: T = \infty \quad (\text{no changepoint}),\\
+H_1 &: T < \infty \quad (\text{changepoint exists}).
+\end{aligned}
+\]
+
+### Objective
+
+Define a stopping time \(\tau\) at which we declare “change detected” so as to
+1. **Minimize false alarms** under \(H_0\), and  
+2. **Minimize detection delay**  
+   \[
+     (\tau - T)^+ \;=\; \max\{\tau - T,\,0\}
+   \]  
+   under \(H_1\).
+
+---
 
 ## Performance Measures
 
-### When \( T = \infty \) (No Changepoint):
-For an \( \alpha \in (0, 1) \), control:
-- **Average Run Length (ARL)**: \( \mathbb{E}_\infty[\tau] \geq \frac{1}{\alpha} \), or
-- **Probability of False Alarm (PFA)**: \( P_\infty(\tau < \infty) \leq \alpha \).
+### 1. No Changepoint (\(T = \infty\))
 
-### When \( T < \infty \):
-Ensure that:
-- \( (\tau - T)^+ \) is small, either in expectation or with high probability.
-- The guarantee should hold for the worst-case choice of \( T \).
+For a desired false‑alarm level \(\alpha \in (0, 1)\), one may control either
+- **Average Run Length (ARL):**  
+  \[
+    \mathbb{E}_\infty[\tau] \;\ge\; \frac{1}{\alpha},
+  \]
+- **Probability of False Alarm (PFA):**  
+  \[
+    P_\infty(\tau < \infty) \;\le\; \alpha.
+  \]
+
+### 2. Changepoint Exists (\(T < \infty\))
+
+Under \(H_1\), we require that the detection delay be small in a worst‑case sense:
+\[
+\text{(i.e.)}\quad \sup_{T<\infty}\mathbb{E}_T\bigl[(\tau - T)^+\bigr]
+\quad\text{or}\quad
+\sup_{T<\infty}P_T\bigl((\tau - T)^+ > d\bigr)
+\]
+for small \(d\).
 
 
 ## Tentative Objectives (Copied from Slack)
