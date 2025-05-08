@@ -44,8 +44,6 @@ Define a stopping time \(\tau\) at which we declare “change detected” so as 
    \]  
    under \(H_1\).
 
----
-
 ## Performance Measures
 
 ### 1. No Changepoint (\(T = \infty\))
