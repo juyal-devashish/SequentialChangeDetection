@@ -2,38 +2,38 @@
 
 At the moment, this repository implements and evaluates a sequential change detection framework using the Cumulative Sum (CuSum) algorithm from [Xie et. al.](https://arxiv.org/abs/2104.04186), enhanced with estimated likelihood ratios (LLRs) via convex risk minimization, based on methods outlined by [Nguyen et al.](https://arxiv.org/abs/0809.0853), inshort, the project is exploring change detection in real-time data streams.
 
-## Stream of Independent \( X \)-valued Observations
+## Stream of Independent X-valued Observations
 
-Let \( X_1, X_2, \dots \) denote a stream of independent \( X \)-valued observations:
-- For some \( T \in \mathbb{N} \cup \{\infty\} \):
-  - \( X_t \sim P_0 \) for \( t \leq T \),
-  - \( X_t \sim P_1 \neq P_0 \) for \( t > T \).
-  
+Let X₁, X₂, ... denote a stream of independent X-valued observations:
+- For some T ∈ ℕ ∪ {∞}:
+  - Xₜ ∼ P₀ for t ≤ T,
+  - Xₜ ∼ P₁ ≠ P₀ for t > T.
+
 ### Mild Requirements on the Distributions:
-- Both \( P_0 \) and \( P_1 \) are unknown.
-- \( P_0, P_1 \in \mathcal{P} \) for some known class of distributions \( \mathcal{P} \).
+- Both P₀ and P₁ are unknown.
+- P₀, P₁ ∈ P for some known class of distributions P.
 
 ### Hypothesis Testing:
 Decide between:
-- \( H_0 : T = \infty \) (no changepoint), versus
-- \( H_1 : T < \infty \) (changepoint exists).
+- H₀ : T = ∞ (no changepoint), versus
+- H₁ : T < ∞ (changepoint exists).
 
 ### Objective:
-Define a stopping time \( \tau \) to declare a detection, that:
-- Minimizes false alarms under \( H_0 \), and
-- Has a small detection delay, \( (\tau - T)^+ \), under \( H_1 \).
+Define a stopping time τ to declare a detection, that:
+- Minimizes false alarms under H₀, and
+- Has a small detection delay, (τ - T)⁺, under H₁.
 
 ## Performance Measures
 
-### When \( T = \infty \) (No Changepoint):
-For an \( \alpha \in (0, 1) \), control:
-- **Average Run Length (ARL)**: \( \mathbb{E}_\infty[\tau] \geq \frac{1}{\alpha} \), or
-- **Probability of False Alarm (PFA)**: \( P_\infty(\tau < \infty) \leq \alpha \).
+### When T = ∞ (No Changepoint):
+For an α ∈ (0, 1), control:
+- **Average Run Length (ARL)**: E₋₀[τ] ≥ 1/α, or
+- **Probability of False Alarm (PFA)**: P₋₀(τ < ∞) ≤ α.
 
-### When \( T < \infty \):
+### When T < ∞:
 Ensure that:
-- \( (\tau - T)^+ \) is small, either in expectation or with high probability.
-- The guarantee should hold for the worst-case choice of \( T \).
+- (τ - T)⁺ is small, either in expectation or with high probability.
+- The guarantee should hold for the worst-case choice of T.
 
 
 
