@@ -2,6 +2,40 @@
 
 At the moment, this repository implements and evaluates a sequential change detection framework using the Cumulative Sum (CuSum) algorithm from [Xie et. al.](https://arxiv.org/abs/2104.04186), enhanced with estimated likelihood ratios (LLRs) via convex risk minimization, based on methods outlined by [Nguyen et al.](https://arxiv.org/abs/0809.0853), inshort, the project is exploring change detection in real-time data streams.
 
+## Stream of Independent \( X \)-valued Observations
+
+Let \( X_1, X_2, \dots \) denote a stream of independent \( X \)-valued observations:
+- For some \( T \in \mathbb{N} \cup \{\infty\} \):
+  - \( X_t \sim P_0 \) for \( t \leq T \),
+  - \( X_t \sim P_1 \neq P_0 \) for \( t > T \).
+  
+### Mild Requirements on the Distributions:
+- Both \( P_0 \) and \( P_1 \) are unknown.
+- \( P_0, P_1 \in \mathcal{P} \) for some known class of distributions \( \mathcal{P} \).
+
+### Hypothesis Testing:
+Decide between:
+- \( H_0 : T = \infty \) (no changepoint), versus
+- \( H_1 : T < \infty \) (changepoint exists).
+
+### Objective:
+Define a stopping time \( \tau \) to declare a detection, that:
+- Minimizes false alarms under \( H_0 \), and
+- Has a small detection delay, \( (\tau - T)^+ \), under \( H_1 \).
+
+## Performance Measures
+
+### When \( T = \infty \) (No Changepoint):
+For an \( \alpha \in (0, 1) \), control:
+- **Average Run Length (ARL)**: \( \mathbb{E}_\infty[\tau] \geq \frac{1}{\alpha} \), or
+- **Probability of False Alarm (PFA)**: \( P_\infty(\tau < \infty) \leq \alpha \).
+
+### When \( T < \infty \):
+Ensure that:
+- \( (\tau - T)^+ \) is small, either in expectation or with high probability.
+- The guarantee should hold for the worst-case choice of \( T \).
+
+
 ## Problem Statement
 
 The core task addressed by this project is to detect an unknown changepoint in a sequence of observations drawn from two distinct distributions:
