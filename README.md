@@ -75,3 +75,75 @@ Due to unknown distributions \$P\$ and \$Q\$, we employ convex risk minimization
 * Granjon, P. (2013). *The CUSUM algorithm - a small review*.
 * Xie, L., et al. (2021). *Sequential (Quickest) Change Detection: Classical Results and New Directions*.
 * Nguyen, X., Wainwright, M., Jordan, M. (2007). *Estimating divergence functionals and the likelihood ratio by convex risk minimization*.
+
+
+# 🔬 RKHS-based CuSum Experiments: Full Task Checklist
+
+This repository contains experiments based on the variational formulation of likelihood ratio estimation (Nguyen, Wainwright, Jordan 2010), plugged into a CuSum change-point detection scheme. Below is the complete task breakdown.
+
+---
+
+## ✅ Core Setup
+
+- [x] Implement RKHS-based LLR estimator (Nguyen et al.)
+- [x] Implement CuSum scheme accepting `log g(x)`
+- [x] Generate synthetic data from pre- and post-change distributions
+- [x] Compute ground truth log-likelihood ratio `log(p/q)`
+- [x] Run RKHS + CuSum baseline with balanced training data
+
+---
+
+## 📈 Training Size Variation
+
+- [ ] Loop over training sizes `n ∈ {50, 100, 200, 400, 800, 1600}`
+- [ ] For each `n`, generate `X_p, X_q`
+- [ ] Train RKHS estimator on each pair
+- [ ] Run CuSum on each, record 100 trials
+- [ ] Plot average detection delay vs training size
+
+---
+
+## ⚙️ Model Complexity Comparison
+
+- [ ] Train Linear Regression on labeled data
+- [ ] Train SVM (RBF) with probability output
+- [ ] Train Neural Network (MLP)
+- [ ] Train XGBoost or Decision Tree
+- [ ] Plot estimated `log g(x)` vs RKHS vs True
+- [ ] Run CuSum for each model and measure detection delay
+- [ ] Plot detection delay vs model type (bar plot)
+
+---
+
+## ⚖️ Data Imbalance Analysis
+
+- [ ] Fix total size (e.g. 1000), vary `(n_P, n_Q)` like:
+  - `(800,200)`
+  - `(500,500)`
+  - `(200,800)`
+- [ ] Train RKHS estimator for each imbalance
+- [ ] Run CuSum and record average detection delay
+- [ ] Plot detection delay vs imbalance setting
+
+---
+
+## 🔁 Divergence Comparison
+
+- [ ] Modify RKHS objective to support alternative `f`-divergences:
+  - [ ] KL (already implemented)
+  - [ ] Pearson χ²
+  - [ ] Hellinger
+- [ ] Train estimator with each divergence
+- [ ] Run CuSum and measure delay
+- [ ] Plot detection delay vs divergence
+
+---
+
+## 📊 Benchmark & Summary
+
+- [ ] Compute MSE between estimated and true log-likelihood ratios
+- [ ] Create summary table:
+  - Rows = model / setting
+  - Columns = MSE, average delay
+- [ ] Final plots: summary figures for presentation
+
