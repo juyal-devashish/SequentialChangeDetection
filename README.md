@@ -146,4 +146,20 @@ This repository contains experiments based on the variational formulation of lik
   - Rows = model / setting
   - Columns = MSE, average delay
 - [ ] Final plots: summary figures for presentation
+ ----
+
+## 📅 Change Detection Paper Timeline
+
+| **Week** | **Goals**                             | **Tasks**                                                                                                                                          | **Deliverables**                                                                 |
+|----------|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| **Week 1** | Finalize Plan and Setup               | - Confirm structure and estimator types  <br> - Reorganize existing code for empirical CUSUM  <br> - Set up template on Overleaf                   | ✅ Final project outline  <br> ✅ Overleaf template                              |
+| **Week 2** | Baseline LLR Experiments              | - Implement experiments with oracle, RKHS, NN, Linear models  <br> - Evaluate ARL and delay under *ideal LLR approximation*  <br> - Sweep training sizes | 📊 Plots: Detection delay vs training size  <br> 📄 Notes: Baseline performance |
+| **Week 3** | Failure Cases and Model Mismatch      | - Design failure scenarios (linear model on nonlinear LLRs, RKHS with high variance)  <br> - Show ARL/delay breakdown  <br> - Visualize LLR error | 📊 Plots: failure cases  <br> 📄 Section 3 draft                                 |
+| **Week 4** | Classifier-based CUSUM                | - Implement betting-based scheme (Section 2.2)  <br> - Train classifier (logistic/NN)  <br> - Simulate \(W_n\) process  <br> - Compare ARL/delay   | 📈 Betting-based detector plots  <br> 📄 Section 4 draft                         |
+| **Week 5** | Multiclass Extension                  | - Create 3-class post-change scenario  <br> - Implement multiclass betting (e.g., one-vs-rest or softmax-based scheme)  <br> - Validate detection   | 📊 Plots: multiclass detection  <br> 📄 Section 5 draft                          |
+| **Week 6** | Unified Experiments + Summary Tables  | - Run full comparison: Oracle vs RKHS vs NN vs Classifier  <br> - Collect metrics  <br> - Build ARL/delay summary table                           | 📊 Final comparative table  <br> 📄 Complete Section 6                          |
+| **Week 7** | Full Paper Drafting                   | - Write Sections 1, 2, and 7 (Intro, LLR, Conclusion)  <br> - Polish experimental write-ups  <br> - Format references, figures                     | 📝 Full Overleaf draft  <br> 📄 Clean bibliography                              |
+| **Week 8** | Revision + Feedback                   | - Get advisor feedback  <br> - Run requested experiments  <br> - Final proofreading                                                                | ✅ Final PDF  <br> 📬 Submission-ready manuscript                                |
+
+---
 
