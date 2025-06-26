@@ -94,3 +94,81 @@ class GaussianMixtureSource(DataSource):
         k = np.random.choice(self.n_components, p=self.weights)
         return np.random.multivariate_normal(self.mus[k], self.covs[k])
 
+
+def create_gap_pmf(delta: float, n_classes: int, *, alt: bool, rng=None) -> np.ndarray:
+    """
+    Generate a probability mass function that meets the user-specified
+    “gap-b” construction.
+
+    Construction rules
+    ------------------
+    1. Pick b ∼ Unif(0, (1-delta)/2).
+    2. Choose j uniformly from {1,…, n_classes−1}.
+    3. If alt is True :  p[0] = b,         p[j] = b + delta     (j is the max).
+       If alt is False:  p[0] = b + delta, p[j] = b             (0 is the max).
+    4. For every remaining index i ∉ {0, j}, draw r_i ∼ Unif(0,1).
+       Scale {r_i} so their total probability mass equals 1 − (2b + delta).
+    5. Return the resulting length-`n_classes` vector (sums exactly to 1).
+
+    Parameters
+    ----------
+    delta : float
+        The desired gap (0 < delta < 1).
+    n_classes : int
+        Number of classes (≥ 2; if =2 the result is deterministic).
+    alt : bool
+        • True  → the largest probability sits at some index j ≠ 0  
+        • False → index 0 has the largest probability.
+    rng : np.random.Generator, optional
+        NumPy random generator for reproducibility.  A new one is created
+        if None is supplied.
+
+    Returns
+    -------
+    np.ndarray
+        A probability vector of length `n_classes` satisfying the gap rule.
+    """
+    if not (0.0 < delta < 1.0):
+        raise ValueError("delta must lie strictly between 0 and 1.")
+    if n_classes < 2:
+        raise ValueError("n_classes must be at least 2.")
+
+    rng = rng or np.random.default_rng()
+
+    # 1. Draw b
+    b = rng.uniform(0.0, (1.0 - delta) / 2.0)
+
+    # 2. Pick j (cannot be 0)
+    j = int(rng.integers(1, n_classes))
+
+    pmf = np.zeros(n_classes)
+
+    # 3–4. Set the two special coordinates
+    if alt:
+        pmf[0] = b
+        pmf[j] = b + delta
+    else:
+        pmf[0] = b + delta
+        pmf[j] = b
+
+    # Remaining probability mass
+    remaining_mass = 1.0 - (2.0 * b + delta)
+
+    if remaining_mass < 0:      # should never happen given the range of b
+        raise RuntimeError("Internal error: negative remaining mass")
+
+    # 5. Fill the other coordinates (if any)
+    other_idx = [i for i in range(n_classes) if i not in (0, j)]
+    if other_idx:
+        r = rng.random(len(other_idx))
+        r_sum = r.sum()
+        # In the extremely unlikely event r_sum is 0, make them uniform
+        if r_sum == 0.0:
+            r[:] = 1.0
+            r_sum = len(r)
+        pmf[other_idx] = remaining_mass * r / r_sum
+    else:
+        # This happens only when n_classes == 2; remaining_mass must be zero
+        pmf /= pmf.sum()  # safety normalisation
+
+    return pmf
