@@ -66,6 +66,15 @@ class OneHotSource(DataSource):
         vec[j] = 1
         return vec
 
+    def __iter__(self):
+        """Allow `for z in OneHotSource(...)` loops."""
+        self.reset()
+        while True:
+            try:
+                yield self.next()
+            except StopIteration:
+                break
+
 class GaussianMixtureSource(DataSource):
     """
     Emits continuous samples from a mixture of Gaussians in R^d.
@@ -172,3 +181,59 @@ def create_gap_pmf(delta: float, n_classes: int, *, alt: bool, rng=None) -> np.n
         pmf /= pmf.sum()  # safety normalisation
 
     return pmf
+
+class ChangePointSource(DataSource):
+    """
+    A streaming DataSource that switches from a pre-change generator to a post-change generator at a specified changepoint.
+
+    Attributes:
+        pre_source    : DataSource yielding samples under the null distribution
+        post_source   : DataSource yielding samples under the alternative distribution
+        T_c           : changepoint index (1-based). Observations 1..T_c from pre_source, then from post_source.
+        length        : total number of samples to generate (if None, streams until sources exhaust)
+        randomize_Tc  : if True, draws a new T_c uniformly in [1, length] on reset()
+    """
+
+    def __init__(
+        self,
+        pre_source: DataSource,
+        post_source: DataSource,
+        T_c: int,
+        length: Optional[int] = None,
+        randomize_Tc: bool = False,
+    ):
+        self.pre_source = pre_source
+        self.post_source = post_source
+        self.T_c = T_c
+        self.length = length
+        self.randomize_Tc = randomize_Tc
+        self._t = 0
+
+    def reset(self) -> None:
+        """Reset both underlying sources and optionally randomize the changepoint."""
+        self.pre_source.reset()
+        self.post_source.reset()
+        self._t = 0
+        if self.randomize_Tc:
+            if self.length is None:
+                raise ValueError("Must specify 'length' to randomize changepoint.")
+            self.T_c = np.random.randint(1, self.length + 1)
+
+    def next(self):
+        """Return the next sample, advancing time and switching at T_c."""
+        self._t += 1
+        if self.length is not None and self._t > self.length:
+            raise StopIteration
+        if self._t <= self.T_c:
+            return self.pre_source.next()
+        else:
+            return self.post_source.next()
+
+    def __iter__(self):
+        """Support iteration by returning samples until exhaustion (no error on no-change)."""
+        self.reset()
+        while True:
+            try:
+                yield self.next()
+            except StopIteration:
+                break
